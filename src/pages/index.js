@@ -8,7 +8,7 @@ import Hero from "../components/hero";
 import Layout from "../components/layout";
 import ArticlePreview from "../components/article-preview";
 import SimpleBlockComponent from "./SimpleBlockComponent";
-import GridComponent from "./GridComponent";
+import GridComponent from "./ComponentGrid";
 
 const RootIndex = (props) => {
   const siteTitle = get(props, "data.site.siteMetadata.title");
