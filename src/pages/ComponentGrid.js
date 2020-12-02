@@ -1,4 +1,5 @@
 import React from "react";
+import map from "lodash/map";
 
 export default (props) => (
   <div
@@ -9,7 +10,7 @@ export default (props) => (
       height: "200px",
     }}
   >
-    {props.images.map((image) => (
+    {map(props.images, (image) => (
       <div
         style={{
           border: "3px solid gray",
