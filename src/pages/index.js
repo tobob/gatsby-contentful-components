@@ -2,30 +2,37 @@ import React from "react";
 import { graphql } from "gatsby";
 import get from "lodash/get";
 import first from "lodash/first";
+import map from "lodash/map";
 import { Helmet } from "react-helmet";
 import Hero from "../components/hero";
 import Layout from "../components/layout";
 import ArticlePreview from "../components/article-preview";
+import SimpleBlockComponent from "./SimpleBlockComponent";
+import GridComponent from "./GridComponent";
 
-class RootIndex extends React.Component {
-  render() {
-    const siteTitle = get(this, "props.data.site.siteMetadata.title");
-    const paths = get(this, "props.data.allContentfulMainPage.edges");
-    const page = first(paths);
-    return (
-      <Layout location={this.props.location}>
-        <div style={{ background: "#fff" }}>
-          <Helmet title={siteTitle} />
-          <div className="wrapper">
-            <h2 className="section-headline">Recent articles</h2>
-            <ul className="article-list"></ul>
-            {page.node.path}
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-}
+const RootIndex = (props) => {
+  const siteTitle = get(props, "data.site.siteMetadata.title");
+  const paths = get(props, "data.allContentfulMainPage.edges");
+  const page = first(paths);
+
+  const renderComponent = (component) => {
+    if (component.__typename === "ContentfulSimpleBlockComponent") {
+      return <SimpleBlockComponent {...component} />;
+    }
+    if (component.__typename === "ContentfulGridComponent") {
+      return <GridComponent {...component} />;
+    }
+    return component.__typename;
+  };
+
+  return (
+    <Layout location={props.location}>
+      <Helmet title={siteTitle} />
+      {page.node.path}
+      {map(page.node.references, renderComponent)}
+    </Layout>
+  );
+};
 
 export default RootIndex;
 
@@ -35,6 +42,25 @@ export const pageQuery = graphql`
       edges {
         node {
           path
+          references {
+            ... on ContentfulSimpleBlockComponent {
+              id
+              __typename
+              color
+              header {
+                raw
+              }
+            }
+            ... on ContentfulGridComponent {
+              id
+              __typename
+              images {
+                file {
+                  url
+                }
+              }
+            }
+          }
         }
       }
     }
