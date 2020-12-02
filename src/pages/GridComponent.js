@@ -4,20 +4,27 @@ export default (props) => (
   <div
     style={{
       display: "flex",
-      flexFlow: "row nowrap",
-      width: "400px",
+      flexDirection: "row",
+      maxWidth: "100%",
       height: "200px",
     }}
   >
     {props.images.map((image) => (
-      <img
+      <div
         style={{
-          flex: "1 1 auto",
-          border: "1px solid black",
-          objectFit: "contain",
+          border: "3px solid gray",
+          width: `${100 / props.images.length}%`,
         }}
-        src={image.file.url}
-      />
+      >
+        <img
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+          src={image.file.url}
+        />
+      </div>
     ))}
   </div>
 );
